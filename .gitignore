@@ -1,0 +1,7 @@
+src
+build
+install
+venv
+*.ini
+*.tar*
+out
