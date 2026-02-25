@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1091
 
-brew install meson python-setuptools llvm libxshmfence libxrandr ninja lld libclc vulkan-headers
+brew install meson python-setuptools llvm libxshmfence libxrandr ninja lld libclc vulkan-headers spirv-llvm-translator
 python3 -m venv venv
 
 . venv/bin/activate
