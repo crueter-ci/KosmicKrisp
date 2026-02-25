@@ -10,6 +10,8 @@ _src="$PWD/src"
 _build="$PWD/build/$_dir"
 _out="$PWD/install/$_dir"
 
+which ccache || exit 1
+
 if [ ! -d "$_out" ]; then
     mkdir -p "$_src" "$_build" "$_out"
 
@@ -24,7 +26,7 @@ if [ ! -d "$_out" ]; then
         -DCMAKE_C_COMPILER_LAUNCHER="$(which ccache)" \
         -G Ninja
 
-    cmake --build "$_build"
+    cmake --build "$_build" --verbose
     cmake --install "$_build"
 fi
 

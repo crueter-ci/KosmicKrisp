@@ -52,7 +52,7 @@ export PATH="$LLVM_PREFIX/bin:$PATH"
 
 export CFLAGS="-g1"
 export CXXFLAGS="-g1"
-export LDFLAGS="-fuse-ld=lld --ld-path=$LD"
+export LDFLAGS="-fuse-ld=$LD"
 
 export LIBRARY_PATH="${ZSTD_PREFIX}/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}"
 export PKG_CONFIG_PATH="$SPIRV_DIR/lib/pkgconfig"
