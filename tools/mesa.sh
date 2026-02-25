@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1091
 
-brew install meson python-setuptools llvm libxshmfence libxrandr ninja lld libclc vulkan-headers spirv-llvm-translator
+brew install meson python-setuptools llvm libxshmfence libxrandr ninja lld libclc vulkan-headers spirv-llvm-translator ccache
 python3 -m venv venv
 
 . venv/bin/activate
@@ -16,9 +16,10 @@ DOWNLOAD="https://gitlab.freedesktop.org/mesa/mesa/-/archive/$COMMIT/mesa-$COMMI
 
 LLVM_PREFIX="$(brew --prefix llvm)"
 ZSTD_PREFIX="$(brew --prefix zstd)"
+CCACHE="$(which ccache)"
 
-export CC="$LLVM_PREFIX/bin/clang"
-export CXX="$LLVM_PREFIX/bin/clang++"
+export CC="$CCACHE $LLVM_PREFIX/bin/clang"
+export CXX="$CCACHE $LLVM_PREFIX/bin/clang++"
 export AR="$LLVM_PREFIX/bin/llvm-ar"
 export NM="$LLVM_PREFIX/bin/llvm-nm"
 export RANLIB="$LLVM_PREFIX/bin/llvm-ranlib"
@@ -44,7 +45,11 @@ export SRC_DIR="src/mesa-$COMMIT"
 export BUILD_DIR="build/mesa-$COMMIT"
 
 [ ! -f "mesa-$COMMIT".tar.gz ] && curl "$DOWNLOAD" -o "mesa-$COMMIT".tar.gz
-[ ! -d "$BUILD_DIR" ] && tar xf "mesa-$COMMIT".tar.gz -C src
+if [ ! -d "$BUILD_DIR" ]; then
+    if ! tar xf "mesa-$COMMIT".tar.gz -C src; then
+        cat "mesa-$COMMIT".tar.gz
+    fi
+fi
 
 export PATH="$LLVM_PREFIX/bin:$PATH"
 
