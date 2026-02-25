@@ -13,10 +13,12 @@ pip install mako setuptools pyyaml
 
 LLVM_PREFIX="$(brew --prefix llvm)"
 ZSTD_PREFIX="$(brew --prefix zstd)"
-CCACHE="$(which ccache)"
+# TODO
+# CCACHE="$(which ccache)"
 
-export CC="$CCACHE $LLVM_PREFIX/bin/clang"
-export CXX="$CCACHE $LLVM_PREFIX/bin/clang++"
+export CC="$LLVM_PREFIX/bin/clang"
+export CXX="$LLVM_PREFIX/bin/clang++"
+
 export AR="$LLVM_PREFIX/bin/llvm-ar"
 export NM="$LLVM_PREFIX/bin/llvm-nm"
 export RANLIB="$LLVM_PREFIX/bin/llvm-ranlib"
@@ -37,12 +39,14 @@ EOF
 
 cat brew-llvm.ini
 
+
 mkdir -p build src
+_commit=710c87bced2ba88cc1cc5f5e3504fd73591cb886
+
 _src="$PWD/src/mesa-$_commit"
 _build="$PWD/build/mesa-$_commit"
 _out="$PWD/install/mesa-$_commit"
 
-_commit=710c87bced2ba88cc1cc5f5e3504fd73591cb886
 _repo=mesa/mesa
 _artifact=mesa-$_commit.tar.gz
 DOWNLOAD="https://gitlab.freedesktop.org/$_repo/-/archive/$_commit/$_artifact"
