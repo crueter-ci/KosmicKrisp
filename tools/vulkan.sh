@@ -20,8 +20,8 @@ if [ ! -d "$_out" ]; then
         -DCMAKE_INSTALL_PREFIX="$_out" \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTS=OFF \
-        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-        -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_CXX_COMPILER_LAUNCHER="$(which ccache)" \
+        -DCMAKE_C_COMPILER_LAUNCHER="$(which ccache)" \
         -G Ninja
 
     cmake --build "$_build"
