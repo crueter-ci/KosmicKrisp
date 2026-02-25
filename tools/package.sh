@@ -1,10 +1,17 @@
-#!/bin/sh
+#!/bin/sh -e
+
+: "${VERSION:?VERSION is required}"
 
 _out="$PWD/out"
 _lib="$_out/lib"
 _icd="$_out/vulkan/icd.d"
+_artifacts="$PWD/artifacts"
 
-mkdir -p "$_lib" "$_icd"
+rm -rf "$_out"
+mkdir -p "$_lib" "$_icd" "$_artifacts"
 
 find install \( -type f -o -type l \) -name '*.dylib' -exec cp {} "$_lib" \;
 find install -type f -name '*icd*json' -exec cp {} "$_icd" \;
+
+cd out
+tar --zstd -cf "$_artifacts"/KosmicKrisp-"$VERSION".tar.zst ./*

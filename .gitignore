@@ -5,3 +5,4 @@ venv
 *.ini
 *.tar*
 out
+artifacts
