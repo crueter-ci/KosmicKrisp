@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1091
 
-brew install meson python-setuptools llvm libxshmfence libxrandr ninja lld
+brew install meson python-setuptools llvm libxshmfence libxrandr ninja lld libclc vulkan-headers
 python3 -m venv venv
 
 . venv/bin/activate
@@ -52,7 +52,7 @@ export PATH="$LLVM_PREFIX/bin:$PATH"
 
 export CFLAGS="-g1"
 export CXXFLAGS="-g1"
-export LDFLAGS="-fuse-ld=lld"
+export LDFLAGS="-fuse-ld=lld --ld-path=$LD"
 
 export LIBRARY_PATH="${ZSTD_PREFIX}/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}"
 export PKG_CONFIG_PATH="$SPIRV_DIR/lib/pkgconfig"

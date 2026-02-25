@@ -28,4 +28,6 @@ if [ ! -d "$_out" ]; then
     cmake --install "$_build"
 fi
 
+"$(which ccache)" -s
+
 export VULKAN_LOADER_DIR="$_out"
