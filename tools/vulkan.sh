@@ -10,7 +10,7 @@ _src="$PWD/src"
 _build="$PWD/build/$_dir"
 _out="$PWD/install/$_dir"
 
-which ccache || exit 1
+CCACHE="$(which ccache)"
 
 if [ ! -d "$_out" ]; then
     mkdir -p "$_src" "$_build" "$_out"
@@ -22,14 +22,12 @@ if [ ! -d "$_out" ]; then
         -DCMAKE_INSTALL_PREFIX="$_out" \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTS=OFF \
-        -DCMAKE_CXX_COMPILER_LAUNCHER="$(which ccache)" \
-        -DCMAKE_C_COMPILER_LAUNCHER="$(which ccache)" \
+        -DCMAKE_CXX_COMPILER_LAUNCHER="$CCACHE" \
+        -DCMAKE_C_COMPILER_LAUNCHER="$CCACHE" \
         -G Ninja
 
-    cmake --build "$_build" --verbose
+    cmake --build "$_build"
     cmake --install "$_build"
 fi
-
-"$(which ccache)" -s
 
 export VULKAN_LOADER_DIR="$_out"

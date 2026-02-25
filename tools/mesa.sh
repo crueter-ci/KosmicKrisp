@@ -46,13 +46,11 @@ export BUILD_DIR="build/mesa-$COMMIT"
 [ ! -f "mesa-$COMMIT".tar.gz ] && curl "$DOWNLOAD" -o "mesa-$COMMIT".tar.gz
 [ ! -d "$BUILD_DIR" ] && tar xf "mesa-$COMMIT".tar.gz -C src
 
-# [ ! -d mesa ] && git clone --recursive "$DOWNLOAD"
-
 export PATH="$LLVM_PREFIX/bin:$PATH"
 
 export CFLAGS="-g1"
 export CXXFLAGS="-g1"
-export LDFLAGS="-fuse-ld=$LD"
+export LDFLAGS="-fuse-ld=lld"
 
 export LIBRARY_PATH="${ZSTD_PREFIX}/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}"
 export PKG_CONFIG_PATH="$SPIRV_DIR/lib/pkgconfig"

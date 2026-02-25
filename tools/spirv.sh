@@ -6,6 +6,8 @@ _dir=SPIRV-Tools-$_commit
 _artifact=$_commit.tar.gz
 _url=https://github.com/$_repo/archive/$_artifact
 
+CCACHE="$(which ccache)"
+
 _src="$PWD"/src
 _build="$PWD"/build/$_dir
 _out="$PWD"/install/$_dir
@@ -25,6 +27,8 @@ if [ ! -d "$_out" ]; then
         -DSPIRV_TOOLS_BUILD_SHARED=OFF \
         -DSPIRV_TOOLS_BUILD_STATIC=ON \
         -DCMAKE_INSTALL_PREFIX="$_out" \
+        -DCMAKE_CXX_COMPILER_LAUNCHER="$CCACHE" \
+        -DCMAKE_C_COMPILER_LAUNCHER="$CCACHE" \
         -G Ninja -DCMAKE_BUILD_TYPE=Release
 
     cmake --build "$_build"
