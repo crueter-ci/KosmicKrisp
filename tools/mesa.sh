@@ -11,9 +11,6 @@ python3 -m venv venv
 
 pip install mako setuptools pyyaml
 
-COMMIT=710c87bced2ba88cc1cc5f5e3504fd73591cb886
-DOWNLOAD="https://gitlab.freedesktop.org/mesa/mesa/-/archive/$COMMIT/mesa-$COMMIT.tar.gz"
-
 LLVM_PREFIX="$(brew --prefix llvm)"
 ZSTD_PREFIX="$(brew --prefix zstd)"
 CCACHE="$(which ccache)"
@@ -41,15 +38,17 @@ EOF
 cat brew-llvm.ini
 
 mkdir -p build src
-export SRC_DIR="src/mesa-$COMMIT"
-export BUILD_DIR="build/mesa-$COMMIT"
+_src="$PWD/src/mesa-$_commit"
+_build="$PWD/build/mesa-$_commit"
+_out="$PWD/install/mesa-$_commit"
 
-[ ! -f "mesa-$COMMIT".tar.gz ] && curl "$DOWNLOAD" -o "mesa-$COMMIT".tar.gz
-if [ ! -d "$BUILD_DIR" ]; then
-    if ! tar xf "mesa-$COMMIT".tar.gz -C src; then
-        cat "mesa-$COMMIT".tar.gz
-    fi
-fi
+_commit=710c87bced2ba88cc1cc5f5e3504fd73591cb886
+_repo=mesa/mesa
+_artifact=mesa-$_commit.tar.gz
+DOWNLOAD="https://gitlab.freedesktop.org/$_repo/-/archive/$_commit/$_artifact"
+
+[ -f $_artifact ] || curl "$DOWNLOAD" -o $_artifact --fail
+[ -d "$_build" ] || tar xf $_artifact -C src
 
 export PATH="$LLVM_PREFIX/bin:$PATH"
 
@@ -60,7 +59,7 @@ export LDFLAGS="-fuse-ld=lld"
 export LIBRARY_PATH="${ZSTD_PREFIX}/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}"
 export PKG_CONFIG_PATH="$SPIRV_DIR/lib/pkgconfig"
 
-meson setup "$BUILD_DIR" "$SRC_DIR" \
+meson setup "$_build" "$_src" \
     -D b_ndebug=true \
     -D gallium-drivers= \
     -D vulkan-drivers=kosmickrisp \
@@ -71,5 +70,5 @@ meson setup "$BUILD_DIR" "$SRC_DIR" \
     --native-file brew-llvm.ini \
     --prefer-static
 
-meson compile -C "$BUILD_DIR"
-meson install -C "$BUILD_DIR" --destdir "$PWD"/install/mesa
+meson compile -C "$_build"
+meson install -C "$_build" --destdir "$_out"
