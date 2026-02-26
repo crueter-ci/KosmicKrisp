@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1091
 
-brew install meson python-setuptools llvm libxshmfence libxrandr ninja lld libclc vulkan-headers spirv-llvm-translator ccache
+brew install meson python-setuptools llvm ninja lld libclc vulkan-headers spirv-llvm-translator ccache
 python3 -m venv venv
 
 . venv/bin/activate
@@ -14,7 +14,7 @@ pip install mako setuptools pyyaml
 LLVM_PREFIX="$(brew --prefix llvm)"
 ZSTD_PREFIX="$(brew --prefix zstd)"
 # TODO
-# CCACHE="$(which ccache)"
+CCACHE="$(which ccache)"
 
 export CC="$LLVM_PREFIX/bin/clang"
 export CXX="$LLVM_PREFIX/bin/clang++"
@@ -28,8 +28,8 @@ export LD="$LLVM_PREFIX/bin/ld.lld"
 cat << EOF > brew-llvm.ini
 [binaries]
 llvm-config = '$LLVM_PREFIX/bin/llvm-config'
-c = '$CC'
-cpp = '$CXX'
+c = ['$CCACHE', '$CC']
+cpp = ['$CCACHE', '$CXX']
 ar = '$AR'
 nm = '$NM'
 strip = '$STRIP'
@@ -41,15 +41,17 @@ cat brew-llvm.ini
 
 
 mkdir -p build src
-_commit=710c87bced2ba88cc1cc5f5e3504fd73591cb886
+_commit=26.0.1
+# _commit=710c87bced2ba88cc1cc5f5e3504fd73591cb886
 
 _src="$PWD/src/mesa-$_commit"
 _build="$PWD/build/mesa-$_commit"
 _out="$PWD/install/mesa-$_commit"
 
 _repo=mesa/mesa
-_artifact=mesa-$_commit.tar.gz
-DOWNLOAD="https://gitlab.freedesktop.org/$_repo/-/archive/$_commit/$_artifact"
+_artifact=mesa-$_commit.tar.xz
+# DOWNLOAD="https://gitlab.freedesktop.org/$_repo/-/archive/$_commit/$_artifact"
+DOWNLOAD=https://archive.mesa3d.org/$_artifact
 
 [ -f $_artifact ] || curl "$DOWNLOAD" -o $_artifact --fail
 [ -d "$_build" ] || tar xf $_artifact -C src
