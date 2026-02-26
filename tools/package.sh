@@ -20,4 +20,4 @@ find "$_icd" -type f -exec sed -i '' \
 # TODO: FIX ICD lib path to ../../Frameworks/blah.dylib
 
 cd out
-tar --zstd -cf "$_artifacts"/KosmicKrisp-"$VERSION".tar.zst ./*
+tar --zstd -cf "$_artifacts"/KosmicKrisp-"v$VERSION".tar.zst ./*
