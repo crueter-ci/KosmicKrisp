@@ -15,7 +15,7 @@ find install -type f -name '*icd*json' -exec cp {} "$_icd" \;
 
 mv "$_lib/libvulkan.1"*.dylib "$_lib/libvulkan.1.dylib"
 find "$_icd" -type f -exec sed -i '' \
-    's|"library_path": .*\(lib.*\.dylib\)"|"library_path": "../../Frameworks/\1"|g' {} \;
+    's|"library_path": .*\(lib.*\.dylib\)"|"library_path": "../../../Frameworks/\1"|g' {} \;
 
 # TODO: FIX ICD lib path to ../../Frameworks/blah.dylib
 
