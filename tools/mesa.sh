@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1091
 
-brew install meson python-setuptools llvm ninja lld libclc vulkan-headers spirv-llvm-translator ccache
+brew install meson cmake python-setuptools llvm ninja lld libclc vulkan-headers spirv-llvm-translator ccache pkg-config
 python3 -m venv venv
 
 . venv/bin/activate
@@ -41,19 +41,24 @@ cat brew-llvm.ini
 
 
 mkdir -p build src
-_commit=26.0.1
-# _commit=710c87bced2ba88cc1cc5f5e3504fd73591cb886
+_tagged=false
+
+if [ "$_tagged" = "true" ] ; then
+    _commit=26.0.1
+    _artifact=mesa-$_commit.tar.xz
+    _download=https://archive.mesa3d.org/$_artifact
+else
+    _repo=aitor/mesa
+    _commit=3c8e55abd3dd8393f1a7a37c62b4a610f8b0aea7
+    _artifact=mesa-$_commit.tar.gz
+    _download="https://gitlab.freedesktop.org/$_repo/-/archive/$_commit/$_artifact"
+fi
 
 _src="$PWD/src/mesa-$_commit"
 _build="$PWD/build/mesa-$_commit"
 _out="$PWD/install/mesa-$_commit"
 
-_repo=mesa/mesa
-_artifact=mesa-$_commit.tar.xz
-# DOWNLOAD="https://gitlab.freedesktop.org/$_repo/-/archive/$_commit/$_artifact"
-DOWNLOAD=https://archive.mesa3d.org/$_artifact
-
-[ -f $_artifact ] || curl "$DOWNLOAD" -o $_artifact --fail
+[ -f $_artifact ] || curl "$_download" -o $_artifact --fail
 [ -d "$_build" ] || tar xf $_artifact -C src
 
 export PATH="$LLVM_PREFIX/bin:$PATH"
@@ -65,8 +70,21 @@ export LDFLAGS="-fuse-ld=lld"
 export LIBRARY_PATH="${ZSTD_PREFIX}/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}"
 export PKG_CONFIG_PATH="$SPIRV_DIR/lib/pkgconfig"
 
+# Debug options.
+if [ "${DEBUG:-false}" = 'true' ]; then
+    NDEBUG=false
+    BUILD_TYPE=debug
+else
+    NDEBUG=true
+    BUILD_TYPE=release
+fi
+
+echo "-- Making $BUILD_TYPE build"
+
 meson setup "$_build" "$_src" \
-    -D b_ndebug=true \
+    --buildtype=$BUILD_TYPE \
+    -D b_ndebug=$NDEBUG \
+    -D strip=$NDEBUG \
     -D gallium-drivers= \
     -D vulkan-drivers=kosmickrisp \
     -D platforms=macos \
