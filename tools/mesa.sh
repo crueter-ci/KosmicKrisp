@@ -39,12 +39,11 @@ EOF
 
 cat brew-llvm.ini
 
-
 mkdir -p build src
-_tagged=false
+_tagged=true
 
 if [ "$_tagged" = "true" ] ; then
-    _commit=26.0.1
+    _commit=26.0.5
     _artifact=mesa-$_commit.tar.xz
     _download=https://archive.mesa3d.org/$_artifact
 else

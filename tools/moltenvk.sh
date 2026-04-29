@@ -5,6 +5,7 @@ _artifact=MoltenVK-macos.tar
 _tag=v1.4.1
 _dir=$PWD/install
 
+# TODO(crueter): Compile myself for iOS etc.
 _url=https://github.com/$_repo/releases/download/$_tag-ryujinx/$_artifact
 
 [ -f $_artifact ] || curl -L "$_url" -o "$_artifact"
