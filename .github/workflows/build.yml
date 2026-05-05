@@ -8,8 +8,9 @@ on:
 permissions:
   contents: write
 
+# TODO(crueter): Extract from script(s)
 env:
-  VERSION: 'aitor-3c8e55abd3'
+  VERSION: '26.0.6'
 
 jobs:
   build:
